@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: "Noto Serif Bengali", serif;
             margin: 0;
             padding: 0;
             display: flex;
@@ -61,6 +64,7 @@
             border-collapse: collapse;
             margin-bottom: 20px;
             table-layout: auto;
+            
         }
         .invoice-table th, .invoice-table td {
             border: 1px solid #dee2e6;
@@ -72,6 +76,7 @@
             background-color: #f1f3f5;
             font-weight: bold;
             color: #495057;
+            font-family: "Noto Serif Bengali", serif;
         }
         .invoice-table th:nth-child(1),
         .invoice-table td:nth-child(1) {
@@ -95,11 +100,12 @@
         }
         .invoice-table td input {
             width: 100%;
-            padding: 8px;
+            padding: 5px;
             box-sizing: border-box;
             border: 1px solid #ced4da;
             border-radius: 4px;
             font-size: 14px;
+            font-family: "Noto Serif Bengali", serif;
         }
         .invoice-table td button {
             background-color: #e63946;
@@ -122,7 +128,7 @@
         }
         .total-row span {
             margin-left: 20px;
-            color: #007bff;
+            color: #F97316;
         }
         .button-group {
             display: flex;
@@ -142,6 +148,8 @@
         }
         .button-group button:hover {
             background-color: #0056b3;
+            transform: Scale(102%);
+            transition: 0.2s;
         }
         .button-group button:nth-child(1) {
             background-color: #28a745;
@@ -272,25 +280,23 @@
     }
 
     function addItem() {
-        let tableBody = document.getElementById('items');
-        let rowCount = tableBody.rows.length;
-        let newRow = tableBody.insertRow();
-        let indexCell = newRow.insertCell(0);
-        let itemCell = newRow.insertCell(1);
-        let quantityCell = newRow.insertCell(2);
-        let priceCell = newRow.insertCell(3);
-        let totalCell = newRow.insertCell(4);
-        let actionsCell = newRow.insertCell(5);
+    let tableBody = document.getElementById('items');
+    let rowCount = tableBody.rows.length;
+    let newRow = document.createElement('tr');
 
-        indexCell.textContent = rowCount + 1;
-        itemCell.innerHTML = '<input type="text" class="item-name">';
-        quantityCell.innerHTML = '<input type="number" class="item-quantity" oninput="calculateTotals()">';
-        priceCell.innerHTML = '<input type="number" class="item-price" oninput="calculateTotals()">';
-        totalCell.textContent = '৳0.00';
-        actionsCell.innerHTML = '<button onclick="removeItem(this)">Remove</button>';
+    newRow.innerHTML = `
+        <td class="serial-number">${rowCount + 1}</td>
+        <td><input type="text" class="item-name"></td>
+        <td><input type="number" class="item-quantity" oninput="calculateTotals()"></td>
+        <td><input type="number" class="item-price" oninput="calculateTotals()"></td>
+        <td class="item-total">৳0.00</td>
+        <td><button onclick="removeItem(this)">Remove</button></td>
+    `;
 
-        calculateTotals();
-    }
+    tableBody.appendChild(newRow);
+
+    calculateTotals(); // Recalculate totals after adding a new item
+}
 
     function removeItem(button) {
         let row = button.closest('tr');
