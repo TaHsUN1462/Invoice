@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+        }
+        .home {
+            width: 40px;
+            height: 40px;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: #DC2626;
+            color: white;
+            border-radius: 10px;
+            transition: 0.2s;
+            border: solid 1px black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            text-decoration: none;
+        }
+        .home:hover {
+            border-radius: 12px;
+        }
+        .home:active {
+            border-radius: 15px;
+        }
+        .invoice h2 {
+            text-align: center;
+            margin: 0 0 20px;
+            color: #343a40;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            table-layout: auto;
+        }
+        .invoice-table th, .invoice-table td {
+            border: 1px solid #dee2e6;
+            padding: 8px;
+            text-align: left;
+            box-sizing: border-box;
+        }
+        .invoice-table th {
+            background-color: #f1f3f5;
+            font-weight: bold;
+            color: #495057;
+        }
+        .invoice-table th:nth-child(1),
+        .invoice-table td:nth-child(1) {
+            width: 5%; /* Narrow width for the # column */
+        }
+        .invoice-table th:nth-child(2),
+        .invoice-table td:nth-child(2) {
+            width: 40%; /* Wider width for the Item column */
+        }
+        .invoice-table th:nth-child(3),
+        .invoice-table td:nth-child(3) {
+            width: 15%; /* Narrow width for the Quantity column */
+        }
+        .invoice-table th:nth-child(4),
+        .invoice-table td:nth-child(4) {
+            width: 20%; /* Width for the Unit Price column */
+        }
+        .invoice-table th:nth-child(5),
+        .invoice-table td:nth-child(5) {
+            width: 20%; /* Width for the Total column */
+        }
+        .invoice-table td input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .invoice-table td button {
+            background-color: #e63946;
+            color: #fff;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .invoice-table td button:hover {
+            background-color: #d62828;
+        }
+        .total-row {
+            text-align: right;
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 18px;
+            color: #343a40;
+        }
+        .total-row span {
+            margin-left: 20px;
+            color: #007bff;
+        }
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .button-group button {
+            padding: 10px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+        .button-group button:hover {
+            background-color: #0056b3;
+        }
+        .button-group button:nth-child(1) {
+            background-color: #28a745;
+        }
+        .button-group button:nth-child(1):hover {
+            background-color: #218838;
+        }
+        .button-group button:nth-child(2) {
+            background-color: #dc3545;
+        }
+        .button-group button:nth-child(2):hover {
+            background-color: #c82333;
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background-color: #fff;
+                margin: 0;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                page-break-inside: avoid; /* Avoid breaking inside the container */
+            }
+            .button-group, .home {
+                display: none; /* Hide buttons when printing */
+            }
+            .invoice-table th:nth-child(6),
+            .invoice-table td:nth-child(6) {
+                display: none; /* Hide Actions column when printing */
+            }
+            @page {
+                margin: 0; /* Remove default margin */
+            }
+            .invoice {
+                width: 100%;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .invoice-table th, .invoice-table td {
+                padding: 6px;
+                font-size: 12px;
+            }
+            .button-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .invoice h2 {
+                font-size: 20px;
+            }
+            .invoice-table th, .invoice-table td {
+                font-size: 10px;
+                padding: 4px;
+            }
+            .button-group button {
+                font-size: 14px;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="https://tahsun1462.github.io/HOME/">
+        <button class="home"><ion-icon name="home"></ion-icon></button>
+    </a>
+    <div class="container">
+        <div class="invoice" id="invoice-content">
+            <h2>Invoice</h2>
+            <table class="invoice-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Unit Price (BDT)</th>
+                        <th>Total (BDT)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="items">
+                    <tr>
+                        <td class="serial-number">1</td>
+                        <td><input type="text" class="item-name" placeholder=""></td>
+                        <td><input type="number" class="item-quantity" oninput="calculateTotals()"></td>
+                        <td><input type="number" class="item-price" oninput="calculateTotals()"></td>
+                        <td class="item-total">৳0.00</td>
+                        <td><button onclick="removeItem(this)">Remove</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="total-row">
+                <span>Total Amount:</span>
+                <span id="total-amount">৳0.00</span>
+            </div>
+            <div class="button-group">
+                <button onclick="addItem()">Add Another Item</button>
+                <button onclick="printInvoice()">Print Invoice</button>
+                <button onclick="removeAllItems()">Remove All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ionicons -->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+    <script>
+    function calculateTotals() {
+        let rows = document.querySelectorAll('#items tr');
+        let totalAmount = 0;
+
+        rows.forEach((row) => {
+            let quantity = row.querySelector('.item-quantity').value || 0;
+            let price = row.querySelector('.item-price').value || 0;
+            let total = quantity * price;
+            row.querySelector('.item-total').textContent = `৳${total.toFixed(2)}`;
+            totalAmount += total;
+        });
+
+        document.getElementById('total-amount').textContent = `৳${totalAmount.toFixed(2)}`;
+    }
+
+    function addItem() {
+        let tableBody = document.getElementById('items');
+        let rowCount = tableBody.rows.length;
+        let newRow = tableBody.insertRow();
+        let indexCell = newRow.insertCell(0);
+        let itemCell = newRow.insertCell(1);
+        let quantityCell = newRow.insertCell(2);
+        let priceCell = newRow.insertCell(3);
+        let totalCell = newRow.insertCell(4);
+        let actionsCell = newRow.insertCell(5);
+
+        indexCell.textContent = rowCount + 1;
+        itemCell.innerHTML = '<input type="text" class="item-name">';
+        quantityCell.innerHTML = '<input type="number" class="item-quantity" oninput="calculateTotals()">';
+        priceCell.innerHTML = '<input type="number" class="item-price" oninput="calculateTotals()">';
+        totalCell.textContent = '৳0.00';
+        actionsCell.innerHTML = '<button onclick="removeItem(this)">Remove</button>';
+
+        calculateTotals();
+    }
+
+    function removeItem(button) {
+        let row = button.closest('tr');
+        row.remove();
+        calculateTotals();
+        updateSerialNumbers();
+    }
+
+    function removeAllItems() {
+        let tableBody = document.getElementById('items');
+        tableBody.innerHTML = '';
+        calculateTotals();
+    }
+
+    function updateSerialNumbers() {
+        let rows = document.querySelectorAll('#items tr');
+        rows.forEach((row, index) => {
+            row.querySelector('.serial-number').textContent = index + 1;
+        });
+    }
+
+    function printInvoice() {
+        window.print();
+    }
+    </script>
+</body>
+</html>
