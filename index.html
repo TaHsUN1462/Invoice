@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@100..900&display=swap" rel="stylesheet">
     <style>
+        /* Your existing CSS styles */
         body {
             font-family: "Noto Serif Bengali", serif;
             margin: 0;
@@ -271,6 +272,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     
     <script>
+    // Calculate totals and update the total amount
     function calculateTotals() {
         let rows = document.querySelectorAll('#items tr');
         let totalAmount = 0;
@@ -286,25 +288,27 @@
         document.getElementById('total-amount').textContent = `৳${totalAmount.toFixed(2)}`;
     }
 
+    // Add a new item row to the invoice
     function addItem() {
-    let tableBody = document.getElementById('items');
-    let rowCount = tableBody.rows.length;
-    let newRow = document.createElement('tr');
+        let tableBody = document.getElementById('items');
+        let rowCount = tableBody.rows.length;
+        let newRow = document.createElement('tr');
 
-    newRow.innerHTML = `
-        <td class="serial-number">${rowCount + 1}</td>
-        <td><input type="text" class="item-name"></td>
-        <td><input type="number" class="item-quantity" oninput="calculateTotals()"></td>
-        <td><input type="number" class="item-price" oninput="calculateTotals()"></td>
-        <td class="item-total">৳0.00</td>
-        <td><button onclick="removeItem(this)">Remove</button></td>
-    `;
+        newRow.innerHTML = `
+            <td class="serial-number">${rowCount + 1}</td>
+            <td><input type="text" class="item-name"></td>
+            <td><input type="number" class="item-quantity" oninput="calculateTotals()"></td>
+            <td><input type="number" class="item-price" oninput="calculateTotals()"></td>
+            <td class="item-total">৳0.00</td>
+            <td><button onclick="removeItem(this)">Remove</button></td>
+        `;
 
-    tableBody.appendChild(newRow);
+        tableBody.appendChild(newRow);
 
-    calculateTotals(); // Recalculate totals after adding a new item
-}
+        calculateTotals(); // Recalculate totals after adding a new item
+    }
 
+    // Remove an item row from the invoice
     function removeItem(button) {
         let row = button.closest('tr');
         row.remove();
@@ -312,12 +316,14 @@
         updateSerialNumbers();
     }
 
+    // Remove all items from the invoice
     function removeAllItems() {
         let tableBody = document.getElementById('items');
         tableBody.innerHTML = '';
         calculateTotals();
     }
 
+    // Update serial numbers after adding or removing items
     function updateSerialNumbers() {
         let rows = document.querySelectorAll('#items tr');
         rows.forEach((row, index) => {
@@ -325,9 +331,40 @@
         });
     }
 
+    // Print the invoice
     function printInvoice() {
         window.print();
     }
+// Listen for keypresses to trigger functions
+document.addEventListener('keydown', function(event) {
+    // Check if the "Insert" key is pressed
+    if (event.key === 'Insert') {
+        event.preventDefault(); // Prevent any default action
+        addItem(); // Call the addItem function
+    }
+
+    // Check if the "Delete" key is pressed
+    if (event.key === 'Delete') {
+        event.preventDefault(); // Prevent any default action
+        let rows = document.querySelectorAll('#items tr');
+        if (rows.length > 0) {
+            removeItem(rows[rows.length - 1].querySelector('button')); // Remove the last item
+        }
+    }
+
+    // Check if the "Page Up" key is pressed
+    if (event.key === 'PageUp') {
+        event.preventDefault(); // Prevent any default action
+        removeAllItems(); // Call the removeAllItems function
+    }
+
+    // Check if the "Page Down" key is pressed
+    if (event.key === 'PageDown') {
+        event.preventDefault(); // Prevent any default action
+        printInvoice(); // Call the printInvoice function
+    }
+});
+
     </script>
 </body>
 </html>
